@@ -1,0 +1,169 @@
+{% extends 'doctor_dashboard/dashboard.html' %}
+{% load static %}
+
+{% block title %}Manage Appointments{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard">
+        <h2>Manage Appointments</h2>
+        
+        <!-- Appointments List -->
+        <div class="appointments-list">
+            {% if appointments %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Patient Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.appointment_date|date:"F j, Y" }} at {{ appointment.appointment_date|time:"g:i A" }}</td>
+                            <td>{{ appointment.patient.get_full_name }}</td>
+                            <td>
+                                {% if appointment.status == 'scheduled' %}
+                                <span class="badge bg-primary">Scheduled</span>
+                                {% elif appointment.status == 'completed' %}
+                                <span class="badge bg-success">Completed</span>
+                                {% else %}
+                                <span class="badge bg-danger">Canceled</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    {% if appointment.status == 'scheduled' %}
+                                    <form method="POST" action="{% url 'doctor_dashboard:update_appointment_status' appointment.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="completed">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-circle"></i> Complete
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'doctor_dashboard:update_appointment_status' appointment.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="canceled">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-x-circle"></i> Cancel
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                    <a href="{% url 'doctor_dashboard:manage_prescriptions' appointment.id %}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-prescription"></i> Prescription
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-center">No appointments scheduled.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .appointments-list {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: #ffffff;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #35424a;
+        color: white;
+        font-weight: bold;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    .table tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+    }
+
+    .bg-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 5px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: none;
+        font-size: 0.9em;
+    }
+
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 0.85em;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .text-center {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: #2196F3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        .credentials {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to DocMate</h1>
+    </div>
+    <div class="content">
+        <p>Dear Dr. {{ doctor.first_name }} {{ doctor.last_name }},</p>
+        
+        <p>Welcome to DocMate! We're excited to have you join our medical community. Your account has been successfully created and is ready to use.</p>
+        
+        <div class="credentials">
+            <h3>Your Login Credentials:</h3>
+            <p><strong>Username:</strong> {{ doctor.username }}</p>
+            <p><strong>Password:</strong> {{ password }}</p>
+        </div>
+        
+        <p>For security reasons, please change your password upon your first login.</p>
+        
+        <p>You can access your dashboard by clicking the button below:</p>
+        
+        <a href="{{ login_url }}" class="button">Access Your Dashboard</a>
+        
+        <p>As a doctor on our platform, you can:</p>
+        <ul>
+            <li>Manage your appointment schedule</li>
+            <li>View and update patient records</li>
+            <li>Send and receive secure messages</li>
+            <li>Access medical history and reports</li>
+        </ul>
+        
+        <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+        
+        <p>Best regards,<br>
+        The DocMate Team</p>
+    </div>
+    <div class="footer">
+        <p>This is an automated message, please do not reply directly to this email.</p>
+        <p>© 2024 DocMate Medical System. All rights reserved.</p>
+    </div>
+</body>
+</html> 

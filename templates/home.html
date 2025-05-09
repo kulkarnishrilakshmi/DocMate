@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to DocMate{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="height: 100vh; background: url('https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;">
+                <div class="carousel-caption">
+                    <h1 class="display-4 fw-bold">Welcome to DocMate 🩺</h1>
+                    <p class="lead">Book appointments instantly and manage your medical history with ease.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'users:login' %}" class="btn btn-light btn-custom me-3">Book Appointment</a>
+                        <a href="#features" class="btn btn-outline-light btn-custom">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose DocMate?</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon floating">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="feature-image mb-3" style="height: 200px; background: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80') center/cover no-repeat;"></div>
+                    <h4 class="fw-bold">Easy Booking</h4>
+                    <p>Book appointments with your preferred doctor in just a few clicks.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon floating">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="feature-image mb-3" style="height: 200px; background: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80') center/cover no-repeat;"></div>
+                    <h4 class="fw-bold">24/7 Access</h4>
+                    <p>Access your medical records and book appointments anytime, anywhere.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon floating">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="feature-image mb-3" style="height: 200px; background: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80') center/cover no-repeat;"></div>
+                    <h4 class="fw-bold">Secure & Private</h4>
+                    <p>Your health information is protected with state-of-the-art security.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Appointment Preview -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="fw-bold mb-4">Book Your Appointment in 3 Simple Steps</h2>
+                <div class="appointment-preview">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-number">1</div>
+                        <div class="ms-3">
+                            <h5 class="mb-1">Choose Your Doctor</h5>
+                            <p class="mb-0 text-muted">Browse through our network of verified specialists</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="step-number">2</div>
+                        <div class="ms-3">
+                            <h5 class="mb-1">Select Time Slot</h5>
+                            <p class="mb-0 text-muted">Pick a convenient time from available slots</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="step-number">3</div>
+                        <div class="ms-3">
+                            <h5 class="mb-1">Confirm Booking</h5>
+                            <p class="mb-0 text-muted">Get instant confirmation and reminders</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-center">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80" alt="Appointment Booking" class="img-fluid rounded-3 shadow-lg">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-4">Ready to Experience Better Healthcare?</h2>
+        <p class="lead mb-4">Join thousands of patients and doctors who trust DocMate for their medical needs.</p>
+        <a href="{% url 'users:register' %}" class="btn btn-primary btn-custom">Create Your Account</a>
+    </div>
+</section>
+
+<style>
+.hero-section {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+}
+
+.carousel-caption {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto;
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.btn-custom {
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.dark-mode .bg-light {
+    background-color: #1a1a1a !important;
+}
+
+.dark-mode .text-muted {
+    color: #a0aec0 !important;
+}
+</style>
+{% endblock %} 

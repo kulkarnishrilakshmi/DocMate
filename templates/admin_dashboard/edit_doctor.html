@@ -1,0 +1,256 @@
+{% extends 'admin_dashboard/dashboard.html' %}
+{% load static %}
+
+{% block title %}Edit Doctor{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Edit Doctor</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard:dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard:manage_doctors' %}">Doctors</a></li>
+        <li class="breadcrumb-item active">Edit Doctor</li>
+    </ol>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-person me-1"></i>
+            Edit Doctor Information
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <!-- Personal Information -->
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Personal Information</h5>
+                        
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ doctor.first_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ doctor.last_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ doctor.email }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ doctor.phone_number }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*">
+                            {% if doctor.profile_picture %}
+                                <div class="mt-2">
+                                    <img src="{{ doctor.profile_picture.url }}" alt="Current Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Professional Information</h5>
+
+                        <div class="mb-3">
+                            <label for="specialization" class="form-label">Specialization</label>
+                            <select class="form-select" id="specialization" name="specialization" required>
+                                <option value="">Select Specialization</option>
+                                {% for spec in specializations %}
+                                    <option value="{{ spec }}" {% if doctor.specialization == spec %}selected{% endif %}>{{ spec }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="experience" class="form-label">Years of Experience</label>
+                            <input type="number" class="form-control" id="experience" name="experience" value="{{ doctor.experience }}" min="0">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="qualifications" class="form-label">Qualifications</label>
+                            <textarea class="form-control" id="qualifications" name="qualifications" rows="3">{{ doctor.qualifications }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Professional Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="4">{{ doctor.bio }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {% if doctor.is_active %}checked{% endif %}>
+                                <label class="form-check-label" for="is_active">
+                                    Active Account
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Languages and Insurance -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Languages Spoken</h5>
+                        <div class="row">
+                            {% for language in languages %}
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="languages" value="{{ language }}" id="lang_{{ language|lower }}"
+                                        {% if language in doctor.languages %}checked{% endif %}>
+                                    <label class="form-check-label" for="lang_{{ language|lower }}">
+                                        {{ language }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Insurance Providers</h5>
+                        <div class="row">
+                            {% for provider in insurance_providers %}
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="insurance_providers" value="{{ provider }}" id="ins_{{ provider|lower }}"
+                                        {% if provider in doctor.insurance_providers %}checked{% endif %}>
+                                    <label class="form-check-label" for="ins_{{ provider|lower }}">
+                                        {{ provider }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability Schedule -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5 class="mb-3">Availability Schedule</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Available</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for day in days %}
+                                    <tr>
+                                        <td>{{ day|title }}</td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="{{ day }}_available" id="{{ day }}_available"
+                                                    {% if day in doctor.availability %}checked{% endif %}>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" name="{{ day }}_start" id="{{ day }}_start" {% if day not in doctor.availability %}disabled{% endif %}>
+                                                <option value="">Select Time</option>
+                                                {% for time in time_slots %}
+                                                    <option value="{{ time }}" {% if day in doctor.availability and doctor.availability.day.start == time %}selected{% endif %}>
+                                                        {{ time }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" name="{{ day }}_end" id="{{ day }}_end" {% if day not in doctor.availability %}disabled{% endif %}>
+                                                <option value="">Select Time</option>
+                                                {% for time in time_slots %}
+                                                    <option value="{{ time }}" {% if day in doctor.availability and doctor.availability.day.end == time %}selected{% endif %}>
+                                                        {{ time }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="{% url 'admin_dashboard:view_doctor' doctor.id %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Phone number formatting
+    document.getElementById('phone_number').addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+    // Auto-capitalize names
+    document.getElementById('first_name').addEventListener('input', function(e) {
+        e.target.value = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
+    });
+    document.getElementById('last_name').addEventListener('input', function(e) {
+        e.target.value = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
+    });
+
+    // Handle availability schedule
+    document.querySelectorAll('input[type="checkbox"][name$="_available"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const day = this.name.split('_')[0];
+            const startSelect = document.getElementById(`${day}_start`);
+            const endSelect = document.getElementById(`${day}_end`);
+            
+            startSelect.disabled = !this.checked;
+            endSelect.disabled = !this.checked;
+            
+            if (!this.checked) {
+                startSelect.value = '';
+                endSelect.value = '';
+            }
+        });
+    });
+
+    // Validate time slots
+    document.querySelectorAll('select[name$="_end"]').forEach(endSelect => {
+        endSelect.addEventListener('change', function() {
+            const day = this.name.split('_')[0];
+            const startSelect = document.getElementById(`${day}_start`);
+            
+            if (startSelect.value && this.value) {
+                if (startSelect.value >= this.value) {
+                    alert('End time must be after start time');
+                    this.value = '';
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %} 

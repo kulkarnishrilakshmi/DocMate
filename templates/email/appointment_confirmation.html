@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        .appointment-details {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Appointment Confirmation</h1>
+    </div>
+    <div class="content">
+        <p>Dear {{ patient.first_name }} {{ patient.last_name }},</p>
+        
+        <p>Your appointment has been successfully scheduled. Here are the details:</p>
+        
+        <div class="appointment-details">
+            <h3>Appointment Information:</h3>
+            <p><strong>Doctor:</strong> Dr. {{ doctor.first_name }} {{ doctor.last_name }}</p>
+            <p><strong>Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Time:</strong> {{ appointment.time }}</p>
+            <p><strong>Type:</strong> {{ appointment.appointment_type }}</p>
+            <p><strong>Location:</strong> {{ doctor.clinic_address }}</p>
+        </div>
+        
+        <p>Important Reminders:</p>
+        <ul>
+            <li>Please arrive 15 minutes before your scheduled time</li>
+            <li>Bring your ID and insurance card</li>
+            <li>Bring any relevant medical records or test results</li>
+            <li>Wear a mask and follow COVID-19 safety protocols</li>
+        </ul>
+        
+        <p>You can manage your appointment by clicking the button below:</p>
+        
+        <a href="{{ appointment_url }}" class="button">View Appointment Details</a>
+        
+        <p>If you need to reschedule or cancel your appointment, please do so at least 24 hours in advance.</p>
+        
+        <p>Best regards,<br>
+        The DocMate Team</p>
+    </div>
+    <div class="footer">
+        <p>This is an automated message, please do not reply directly to this email.</p>
+        <p>© 2024 DocMate Medical System. All rights reserved.</p>
+    </div>
+</body>
+</html> 

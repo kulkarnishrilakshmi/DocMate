@@ -1,0 +1,108 @@
+{% extends 'admin_dashboard/dashboard.html' %}
+{% load static %}
+
+{% block title %}Manage Patients{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Manage Patients</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard:dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Patients</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="bi bi-people me-1"></i>
+                Patient List
+            </div>
+            <a href="#" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Add Patient
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" id="patientsTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td>{{ patient.username }}</td>
+                            <td>{{ patient.get_full_name }}</td>
+                            <td>{{ patient.email }}</td>
+                            <td>{{ patient.phone_number|default:"Not provided" }}</td>
+                            <td>
+                                {% if patient.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'admin_dashboard:view_patient' patient.id %}" class="btn btn-info btn-sm">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'admin_dashboard:edit_patient' patient.id %}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ patient.id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal{{ patient.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ patient.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ patient.id }}">Confirm Delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete patient "{{ patient.get_full_name }}"?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form action="{% url 'admin_dashboard:delete_patient' patient.id %}" method="POST" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">No patients found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#patientsTable').DataTable({
+            responsive: true
+        });
+    });
+</script>
+{% endblock %} 

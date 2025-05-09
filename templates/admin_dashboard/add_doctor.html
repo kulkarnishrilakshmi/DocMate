@@ -1,0 +1,790 @@
+{% extends 'admin_dashboard/dashboard.html' %}
+{% load static %}
+
+{% block title %}Add Doctor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .form-section-title {
+        color: #2c3e50;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+    }
+    .required-field::after {
+        content: "*";
+        color: #dc3545;
+        margin-left: 4px;
+    }
+    .form-select, .form-control {
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        padding: 0.6rem 1rem;
+        transition: all 0.2s ease-in-out;
+    }
+    .form-select:focus, .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+    .form-select option {
+        padding: 10px;
+    }
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.2s ease-in-out;
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #2196F3, #1976D2);
+        border: none;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #1976D2, #1565C0);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn-secondary {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #495057;
+    }
+    .btn-secondary:hover {
+        background: #e9ecef;
+        color: #212529;
+    }
+    .alert {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .alert-info {
+        background: linear-gradient(45deg, #E3F2FD, #BBDEFB);
+        color: #0D47A1;
+    }
+    .specialization-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .specialization-option {
+        padding: 0.8rem;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .specialization-option:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+    }
+    .specialization-option.selected {
+        background: #e3f2fd;
+        border-color: #2196F3;
+    }
+    .form-floating {
+        position: relative;
+    }
+    .form-floating > .form-control {
+        height: calc(3.5rem + 2px);
+        padding: 1rem 0.75rem;
+    }
+    .form-floating > label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1rem 0.75rem;
+        pointer-events: none;
+        border: 1px solid transparent;
+        transform-origin: 0 0;
+        transition: opacity .1s ease-in-out,transform .1s ease-in-out;
+    }
+
+    /* New styles for advanced features */
+    .availability-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .availability-slot {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        transition: all 0.2s ease;
+    }
+    .availability-slot:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .availability-slot.selected {
+        background: #e3f2fd;
+        border-color: #2196F3;
+    }
+    .qualification-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+    .qualification-item:hover {
+        border-color: #2196F3;
+    }
+    .language-tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #e3f2fd;
+        color: #1976D2;
+        border-radius: 20px;
+        margin: 0.25rem;
+        font-size: 0.875rem;
+    }
+    .language-tag .remove {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+    .certification-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+    .certification-item:hover {
+        border-color: #2196F3;
+    }
+    .insurance-provider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+    .insurance-provider:hover {
+        border-color: #2196F3;
+    }
+    .progress-tracker {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    .progress-step::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e9ecef;
+        z-index: -1;
+    }
+    .progress-step.active::before {
+        background: #2196F3;
+    }
+    .step-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-weight: 600;
+    }
+    .progress-step.active .step-number {
+        background: #2196F3;
+        color: white;
+    }
+    .step-label {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    .progress-step.active .step-label {
+        color: #2196F3;
+        font-weight: 600;
+    }
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+        color: #2196F3;
+    }
+    .custom-file-upload {
+        border: 2px dashed #dee2e6;
+        border-radius: 6px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .custom-file-upload:hover {
+        border-color: #2196F3;
+        background: #f8f9fa;
+    }
+    .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 6px;
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Add New Doctor</h1>
+            <p class="text-muted">Create a new doctor account with comprehensive professional details</p>
+        </div>
+        <a href="{% url 'admin_dashboard:manage_doctors' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Doctors
+        </a>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-step active">
+            <div class="step-number">1</div>
+            <div class="step-label">Basic Info</div>
+        </div>
+        <div class="progress-step">
+            <div class="step-number">2</div>
+            <div class="step-label">Professional Details</div>
+        </div>
+        <div class="progress-step">
+            <div class="step-number">3</div>
+            <div class="step-label">Qualifications</div>
+        </div>
+        <div class="progress-step">
+            <div class="step-number">4</div>
+            <div class="step-label">Availability</div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-4">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                All new doctors will be created with the default password: <strong>DocMate@123</strong>
+            </div>
+
+            <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-person-vcard me-2"></i>Personal Information
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
+                                <label for="first_name" class="required-field">First Name</label>
+                            </div>
+                            <div class="invalid-feedback">Please provide a first name.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
+                                <label for="last_name" class="required-field">Last Name</label>
+                            </div>
+                            <div class="invalid-feedback">Please provide a last name.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                                <label for="date_of_birth" class="required-field">Date of Birth</label>
+                            </div>
+                            <div class="invalid-feedback">Please provide date of birth.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="">Select gender...</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="O">Other</option>
+                                </select>
+                                <label for="gender" class="required-field">Gender</label>
+                            </div>
+                            <div class="invalid-feedback">Please select gender.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Profile Photo</label>
+                            <div class="custom-file-upload" id="profile-upload">
+                                <i class="bi bi-cloud-upload fs-1 text-muted"></i>
+                                <p class="mb-0">Drag and drop a photo here or click to browse</p>
+                                <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="d-none">
+                                <img id="preview" class="preview-image d-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-telephone me-2"></i>Contact Information
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                                <label for="email" class="required-field">Email</label>
+                            </div>
+                            <div class="invalid-feedback">Please provide a valid email address.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Phone Number" required>
+                                <label for="phone_number" class="required-field">Phone Number</label>
+                            </div>
+                            <div class="invalid-feedback">Please provide a phone number.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="emergency_contact" name="emergency_contact" placeholder="Emergency Contact">
+                                <label for="emergency_contact">Emergency Contact</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" placeholder="Emergency Contact Name">
+                                <label for="emergency_contact_name">Emergency Contact Name</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px"></textarea>
+                                <label for="address">Address</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Information Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-briefcase me-2"></i>Professional Information
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                                <label for="username" class="required-field">Username</label>
+                            </div>
+                            <div class="invalid-feedback">Please choose a username.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="specialization" class="form-label required-field">Primary Specialization</label>
+                            <select class="form-select" id="specialization" name="specialization" required>
+                                <option value="">Choose specialization...</option>
+                                <optgroup label="Primary Care">
+                                    <option value="Family Physician">Family Physician</option>
+                                    <option value="Internist">Internist</option>
+                                    <option value="Pediatrician">Pediatrician</option>
+                                    <option value="Geriatrician">Geriatrician</option>
+                                </optgroup>
+                                <optgroup label="Surgery">
+                                    <option value="General Surgeon">General Surgeon</option>
+                                    <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+                                    <option value="Plastic Surgeon">Plastic Surgeon</option>
+                                </optgroup>
+                                <optgroup label="Internal Medicine">
+                                    <option value="Cardiologist">Cardiologist</option>
+                                    <option value="Dermatologist">Dermatologist</option>
+                                    <option value="Endocrinologist">Endocrinologist</option>
+                                    <option value="Gastroenterologist">Gastroenterologist</option>
+                                    <option value="Hematologist">Hematologist</option>
+                                    <option value="Nephrologist">Nephrologist</option>
+                                    <option value="Neurologist">Neurologist</option>
+                                    <option value="Oncologist">Oncologist</option>
+                                    <option value="Pulmonologist">Pulmonologist</option>
+                                    <option value="Rheumatologist">Rheumatologist</option>
+                                </optgroup>
+                                <optgroup label="Other Specialties">
+                                    <option value="Allergist">Allergist</option>
+                                    <option value="Anesthesiologist">Anesthesiologist</option>
+                                    <option value="Infectious Disease Specialist">Infectious Disease Specialist</option>
+                                    <option value="Obstetrician/Gynecologist">Obstetrician/Gynecologist</option>
+                                    <option value="Ophthalmologist">Ophthalmologist</option>
+                                    <option value="Otolaryngologist">Otolaryngologist</option>
+                                    <option value="Pathologist">Pathologist</option>
+                                    <option value="Physiatrist">Physiatrist</option>
+                                    <option value="Psychiatrist">Psychiatrist</option>
+                                    <option value="Radiologist">Radiologist</option>
+                                    <option value="Urologist">Urologist</option>
+                                </optgroup>
+                            </select>
+                            <div class="invalid-feedback">Please select a specialization.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="secondary_specialization" class="form-label">Secondary Specialization</label>
+                            <select class="form-select" id="secondary_specialization" name="secondary_specialization">
+                                <option value="">Choose secondary specialization (optional)...</option>
+                                <!-- Same options as primary specialization -->
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="years_of_experience" name="years_of_experience" placeholder="Years of Experience" min="0" max="100">
+                                <label for="years_of_experience">Years of Experience</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="bio" class="form-label">Professional Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="4" placeholder="Enter doctor's professional background, experience, and expertise..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Qualifications Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-mortarboard me-2"></i>Qualifications & Certifications
+                    </h3>
+                    <div id="qualifications-container">
+                        <div class="qualification-item">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="degree[]" placeholder="Degree" required>
+                                        <label>Degree</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="institution[]" placeholder="Institution" required>
+                                        <label>Institution</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control" name="year[]" placeholder="Year" min="1900" max="2100" required>
+                                        <label>Year</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeQualification(this)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary mt-3" onclick="addQualification()">
+                        <i class="bi bi-plus-circle me-2"></i>Add Qualification
+                    </button>
+                </div>
+
+                <!-- Languages Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-translate me-2"></i>Languages
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="language" onchange="addLanguage()">
+                                    <option value="">Select language...</option>
+                                    <option value="English">English</option>
+                                    <option value="Spanish">Spanish</option>
+                                    <option value="French">French</option>
+                                    <option value="German">German</option>
+                                    <option value="Chinese">Chinese</option>
+                                    <option value="Japanese">Japanese</option>
+                                    <option value="Korean">Korean</option>
+                                    <option value="Arabic">Arabic</option>
+                                    <option value="Hindi">Hindi</option>
+                                    <option value="Russian">Russian</option>
+                                </select>
+                                <label>Add Language</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div id="languages-container" class="mt-3">
+                                <!-- Languages will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insurance & Payment Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-credit-card me-2"></i>Insurance & Payment
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Accepted Insurance Providers</label>
+                            <div id="insurance-container">
+                                <div class="insurance-provider">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="insurance[]" value="Aetna" id="insurance_aetna">
+                                        <label class="form-check-label" for="insurance_aetna">Aetna</label>
+                                    </div>
+                                </div>
+                                <div class="insurance-provider">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="insurance[]" value="Blue Cross" id="insurance_bluecross">
+                                        <label class="form-check-label" for="insurance_bluecross">Blue Cross</label>
+                                    </div>
+                                </div>
+                                <div class="insurance-provider">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="insurance[]" value="Cigna" id="insurance_cigna">
+                                        <label class="form-check-label" for="insurance_cigna">Cigna</label>
+                                    </div>
+                                </div>
+                                <div class="insurance-provider">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="insurance[]" value="United Healthcare" id="insurance_united">
+                                        <label class="form-check-label" for="insurance_united">United Healthcare</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="consultation_fee" name="consultation_fee" placeholder="Consultation Fee" min="0" step="0.01">
+                                <label for="consultation_fee">Consultation Fee ($)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-calendar-check me-2"></i>Availability
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="availability-grid">
+                                <div class="availability-slot">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="availability[]" value="monday_morning" id="monday_morning">
+                                        <label class="form-check-label" for="monday_morning">Monday Morning</label>
+                                    </div>
+                                </div>
+                                <div class="availability-slot">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="availability[]" value="monday_afternoon" id="monday_afternoon">
+                                        <label class="form-check-label" for="monday_afternoon">Monday Afternoon</label>
+                                    </div>
+                                </div>
+                                <!-- Add more availability slots for other days -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">Account Creation Process</h5>
+                            <p class="mb-0">A secure random password will be generated and sent to the doctor's email address. They can change it later through their profile settings.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{% url 'admin_dashboard:manage_doctors' %}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-person-plus me-2"></i>Create Doctor Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+    // Phone number formatting
+    document.getElementById('phone_number').addEventListener('input', function (e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+    // Auto-capitalize names
+    document.getElementById('first_name').addEventListener('input', function(e) {
+        this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+    });
+    document.getElementById('last_name').addEventListener('input', function(e) {
+        this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+    });
+
+    // Profile photo upload preview
+    document.getElementById('profile-upload').addEventListener('click', function() {
+        document.getElementById('profile_photo').click();
+    });
+
+    document.getElementById('profile_photo').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview');
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Qualifications management
+    function addQualification() {
+        const container = document.getElementById('qualifications-container');
+        const newQualification = document.createElement('div');
+        newQualification.className = 'qualification-item';
+        newQualification.innerHTML = `
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="degree[]" placeholder="Degree" required>
+                        <label>Degree</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="institution[]" placeholder="Institution" required>
+                        <label>Institution</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" name="year[]" placeholder="Year" min="1900" max="2100" required>
+                        <label>Year</label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger btn-sm mt-3" onclick="removeQualification(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(newQualification);
+    }
+
+    function removeQualification(button) {
+        button.closest('.qualification-item').remove();
+    }
+
+    // Languages management
+    function addLanguage() {
+        const select = document.getElementById('language');
+        const language = select.value;
+        if (language) {
+            const container = document.getElementById('languages-container');
+            const languageTag = document.createElement('span');
+            languageTag.className = 'language-tag';
+            languageTag.innerHTML = `
+                ${language}
+                <input type="hidden" name="languages[]" value="${language}">
+                <span class="remove" onclick="removeLanguage(this)">×</span>
+            `;
+            container.appendChild(languageTag);
+            select.value = '';
+        }
+    }
+
+    function removeLanguage(button) {
+        button.closest('.language-tag').remove();
+    }
+
+    // Form progress tracking
+    const formSections = document.querySelectorAll('.form-section');
+    const progressSteps = document.querySelectorAll('.progress-step');
+    let currentStep = 0;
+
+    function updateProgress() {
+        progressSteps.forEach((step, index) => {
+            if (index <= currentStep) {
+                step.classList.add('active');
+            } else {
+                step.classList.remove('active');
+            }
+        });
+    }
+
+    // Initialize progress
+    updateProgress();
+</script>
+{% endblock %} 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to DocMate</h1>
+    </div>
+    <div class="content">
+        <p>Dear {{ patient.first_name }} {{ patient.last_name }},</p>
+        
+        <p>Welcome to DocMate! We're excited to have you join our medical community. Your account has been successfully created and is ready to use.</p>
+        
+        <p>With DocMate, you can:</p>
+        <ul>
+            <li>Book appointments with our qualified doctors</li>
+            <li>View your appointment history</li>
+            <li>Access your medical records</li>
+            <li>Receive appointment reminders</li>
+        </ul>
+        
+        <p>Get started by booking your first appointment:</p>
+        
+        <a href="{{ book_appointment_url }}" class="button">Book Your First Appointment</a>
+        
+        <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+        
+        <p>Best regards,<br>
+        The DocMate Team</p>
+    </div>
+    <div class="footer">
+        <p>This is an automated message, please do not reply directly to this email.</p>
+        <p>© 2024 DocMate Medical System. All rights reserved.</p>
+    </div>
+</body>
+</html> 

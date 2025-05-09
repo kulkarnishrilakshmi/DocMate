@@ -1,0 +1,96 @@
+{% extends 'patient_dashboard/dashboard.html' %}
+{% load static %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Book Appointment</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'patient_dashboard:dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Book Appointment</li>
+    </ol>
+
+    <!-- Filters Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-funnel me-1"></i>
+            Filters
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="specialization" class="form-label">Specialization</label>
+                    <select name="specialization" id="specialization" class="form-select">
+                        <option value="">All Specializations</option>
+                        {% for spec in specializations %}
+                        <option value="{{ spec }}" {% if spec == current_specialization %}selected{% endif %}>
+                            {{ spec }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="min_fee" class="form-label">Min Fee</label>
+                    <input type="number" name="min_fee" id="min_fee" class="form-control" 
+                           value="{{ current_min_fee }}" placeholder="Min Fee">
+                </div>
+                <div class="col-md-3">
+                    <label for="max_fee" class="form-label">Max Fee</label>
+                    <input type="number" name="max_fee" id="max_fee" class="form-control" 
+                           value="{{ current_max_fee }}" placeholder="Max Fee">
+                </div>
+                <div class="col-md-3">
+                    <label for="sort_by" class="form-label">Sort By</label>
+                    <select name="sort_by" id="sort_by" class="form-select">
+                        <option value="rating" {% if current_sort == 'rating' %}selected{% endif %}>Rating</option>
+                        <option value="fee_low" {% if current_sort == 'fee_low' %}selected{% endif %}>Fee: Low to High</option>
+                        <option value="fee_high" {% if current_sort == 'fee_high' %}selected{% endif %}>Fee: High to Low</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="{% url 'patient_dashboard:book_appointment' %}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctors List -->
+    <div class="row">
+        {% for doctor in doctors %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ doctor.get_full_name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialization }}</h6>
+                    <p class="card-text">
+                        <strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}<br>
+                        <strong>Rating:</strong> 
+                        <span class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= doctor.rating %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        ({{ doctor.rating|floatformat:1 }})
+                    </p>
+                    <p class="card-text">{{ doctor.bio|truncatewords:30 }}</p>
+                    <a href="{% url 'patient_dashboard:request_appointment' doctor.id %}" 
+                       class="btn btn-primary">Book Appointment</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No doctors found matching your criteria.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

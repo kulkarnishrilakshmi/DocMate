@@ -1,0 +1,29 @@
+{% extends 'patient_dashboard/dashboard.html' %}
+
+{% block title %}Appointment Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Appointment Details</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5>Doctor Information</h5>
+            <p>Name: Dr. {{ appointment.doctor.get_full_name }}</p>
+            <p>Specialization: {{ appointment.doctor.specialization }}</p>
+            <p>Fee: ${{ appointment.doctor.consultation_fee }}</p>
+
+            <h5>Appointment Details</h5>
+            <p>Date: {{ appointment.appointment_datetime|date:"F d, Y" }}</p>
+            <p>Time: {{ appointment.appointment_datetime|time:"g:i A" }}</p>
+            <p>Status: {{ appointment.status|title }}</p>
+
+            {% if appointment.notes %}
+            <h5>Notes</h5>
+            <p>{{ appointment.notes }}</p>
+            {% endif %}
+
+            <a href="{% url 'patient_dashboard:view_appointments' %}" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

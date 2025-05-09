@@ -1,0 +1,83 @@
+{% extends 'admin_dashboard/dashboard.html' %}
+{% load static %}
+
+{% block title %}Manage Appointments{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Manage Appointments</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard:dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Appointments</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="bi bi-calendar-check me-1"></i>
+                Appointment List
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bi bi-funnel"></i> Filter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">All Appointments</a></li>
+                    <li><a class="dropdown-item" href="#">Pending</a></li>
+                    <li><a class="dropdown-item" href="#">Confirmed</a></li>
+                    <li><a class="dropdown-item" href="#">Cancelled</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="appointmentsTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.patient.username }}</td>
+                        <td>{{ appointment.doctor.username }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>
+                            <span class="badge {% if appointment.status == 'confirmed' %}bg-success{% elif appointment.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ appointment.status|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-primary btn-sm">View</a>
+                            <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm">Cancel</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No appointments found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#appointmentsTable').DataTable({
+            responsive: true,
+            order: [[2, 'desc'], [3, 'asc']] // Sort by date and time
+        });
+    });
+</script>
+{% endblock %} 

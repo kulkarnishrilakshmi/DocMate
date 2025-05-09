@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Details - DocMate{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Patient Information</h5>
+                    <p><strong>Name:</strong> {{ patient.get_full_name }}</p>
+                    <p><strong>Email:</strong> {{ patient.email }}</p>
+                    <p><strong>Phone:</strong> {{ patient.phone_number }}</p>
+                    <p><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Update Patient History</h5>
+                    <form method="post" action="{% url 'doctor_dashboard:update_patient_history' patient.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="diagnosis" class="form-label">Diagnosis</label>
+                            <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="treatment" class="form-label">Treatment</label>
+                            <textarea class="form-control" id="treatment" name="treatment" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prescription" class="form-label">Prescription</label>
+                            <textarea class="form-control" id="prescription" name="prescription" rows="3" placeholder="Enter medicines and dosage details"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="next_visit_days" class="form-label">Next Visit (in days)</label>
+                            <input type="number" class="form-control" id="next_visit_days" name="next_visit_days" min="1" placeholder="Enter number of days">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update History</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Medical History</h5>
+                    {% for record in history %}
+                    <div class="border-bottom mb-3 pb-3">
+                        <p><strong>Visit Date:</strong> {{ record.visit_date }}</p>
+                        <p><strong>Diagnosis:</strong> {{ record.diagnosis }}</p>
+                        <p><strong>Treatment:</strong> {{ record.treatment }}</p>
+                        {% if record.prescription %}
+                        <p><strong>Prescription:</strong> {{ record.prescription }}</p>
+                        {% endif %}
+                        {% if record.next_visit_days %}
+                        <p><strong>Next Visit:</strong> {{ record.get_next_visit_date }}</p>
+                        {% endif %}
+                        {% if record.notes %}
+                        <p><strong>Notes:</strong> {{ record.notes }}</p>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p>No medical history available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
